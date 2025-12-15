@@ -1,0 +1,26 @@
+﻿.resim-kutu {
+    position: relative;
+    width: 90%;
+    margin: 0 auto; 
+    text-align: center
+}
+
+    .resim-kutu img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+
+.yazi {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    color: white;
+    background: rgb(246, 145, 228);
+    padding: 4px 10px; /*Yazıyla arka plan arasında iç boşluk bırakır*/
+    transform: translateX(-50%); /*kendi genişliğinin yarısı kadar sola çeker*/
+    border-radius: 6px; /*Köşeleri yuvarlatır*/
+    text-decoration: none;
+    font-weight: 600;
+}
