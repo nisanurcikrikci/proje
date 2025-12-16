@@ -17,6 +17,10 @@ namespace proje.Controllers
         {
             return View();
         }
+        public IActionResult Ekipmanlar()
+        {
+            return View();
+        }
         
         public IActionResult Yonlendir()
         {
