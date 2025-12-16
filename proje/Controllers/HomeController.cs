@@ -17,7 +17,18 @@ namespace proje.Controllers
         {
             return View();
         }
+        
+        public IActionResult Yonlendir()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("GirisliSayfa", "Home");
+            }
 
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
+
+        
        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
