@@ -53,19 +53,28 @@ namespace proje.Controllers
             return Json(gunler);
         }
 
-       
+
 
 
         [HttpGet]
         public IActionResult GetUygunSaatler(int trainerId, DateTime tarih)
         {
-            var saatler = new List<string>
+            var calismaSaatleri = new List<string>
     {
-        "09:00", "10:00", "11:00", "12:00",
-        "13:00", "14:00", "15:00", "16:00", "17:00"
+        "09:00","10:00","11:00","12:00","13:00",
+        "14:00","15:00","16:00","17:00"
     };
 
-            return Json(saatler);
+            var doluSaatler = _context.Randevular
+                .Where(r => r.TrainerId == trainerId && r.Tarih == tarih)
+                .Select(r => r.Saat)
+                .ToList();
+
+            var bosSaatler = calismaSaatleri
+                .Except(doluSaatler)
+                .ToList();
+
+            return Json(bosSaatler);
         }
 
         public IActionResult Test()
