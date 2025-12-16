@@ -1,0 +1,121 @@
+﻿.ekipman-aciklama {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.ekipman-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.ekipman-kart {
+    cursor: pointer;
+    text-align: center;
+    width: 260px;
+    padding: 12px;
+
+
+}
+
+    .ekipman-kart img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-icerik {
+    width: 600px;
+    height: 550px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden; /* modal sabit */
+}
+
+/* 🔥 sadece resim kayar */
+.modal-resim-alani {
+    height: 400px; /* resim alanı */
+    overflow-y: auto; /* scroll */
+    margin-top: 15px;
+}
+
+#modalGorsel {
+    width: 100%;
+    display: block;
+}
+
+
+
+
+#modalAciklama {
+    max-height: 120px; /* 🔥 yazı alanı */
+    overflow-y: auto; /* sadece burada scroll */
+    margin-top: 10px;
+}
+body {
+    background-color: #ffe6f0;
+}
+
+.reklam {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20%;
+    z-index: 1000;
+}
+
+/* SOL */
+.reklam-sol {
+    left: 10px;
+    animation: solKayma 3s ease-out;
+}
+
+/* SAĞ */
+.reklam-sag {
+    right: 10px;
+    animation: sagKayma 3s ease-out;
+}
+
+/* Resim */
+.reklam img {
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Animasyonlar */
+@keyframes solKayma {
+    from {
+        transform: translate(-100%, -50%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes sagKayma {
+    from {
+        transform: translate(100%, -50%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0, -50%);
+        opacity: 1;
+    }
+}
