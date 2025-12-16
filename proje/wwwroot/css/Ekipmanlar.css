@@ -72,7 +72,7 @@ body {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 20%;
+    width: 15%;
     z-index: 1000;
 }
 

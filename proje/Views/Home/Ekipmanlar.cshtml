@@ -1,5 +1,237 @@
-﻿@*
-    Fodr more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Ekipmanlar";
+    bool girisYapildiMi = User.Identity.IsAuthenticated;
 }
+
+<link rel="stylesheet" href="~/css/Ekipmanlar.css" />
+
+<h1 class="sayfa-baslik">Queen Spor Salonu Ekipmanları</h1>
+<p class="sayfa-aciklama">
+    Aşağıda salonumuzda bulunan ekipmanları inceleyebilir,
+    üyelere özel detayları görüntüleyebilirsiniz.
+</p>
+
+<!-- 🔹 EKİPMANLAR -->
+
+<div class="reklam reklam-sol">
+    <a href=https://www.hepsiburada.com/akilli-saatler-c-60003676" target="_blank">
+        <img src="~/images/ekipmanlar/reklam1.jpg" alt="Reklam Sol">
+    </a>
+</div>
+
+<div class="reklam reklam-sag">
+    <a href="https://www.n11.com/telefon-ve-aksesuarlari/giyilebilir-teknoloji/akilli-saat" target="_blank">
+        <img src="~/images/ekipmanlar/reklam2.jpg" alt="Reklam Sağ">
+    </a>
+</div>
+
+    <div class="ekipman-grid">
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Leg Press"
+             data-aciklama="Bacak ve kalça kaslarını güçlendiren temel bir makinadır."
+         data-gorsel="/images/vucut/legpress.jpg">
+            <img src="~/images/ekipmanlar/legpress.jpg">
+            <span>Leg Press</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Squat Rack"
+             data-aciklama="Tüm alt vücut kaslarını çalıştıran serbest ağırlık alanıdır."
+         data-gorsel="/images/vucut/squat.jpg">
+            <img src="~/images/ekipmanlar/squat.jpg">
+            <span>Squat Rack</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Chest Press"
+             data-aciklama="Göğüs, omuz ve arka kol kaslarını çalıştırır."
+         data-gorsel="/images/vucut/chestpress.jpg">
+            <img src="~/images/ekipmanlar/chestpress.jpg">
+            <span>Chest Press</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Lat Pulldown"
+             data-aciklama="Sırt ve kanat kaslarını güçlendirmek için kullanılır."
+         data-gorsel="/images/vucut/latpulldown.jp">
+            <img src="~/images/ekipmanlar/latpulldown.jpg">
+            <span>Lat Pulldown</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Seated Row"
+             data-aciklama="Orta sırt ve kürek kemiği çevresini çalıştırır."
+         data-gorsel="/images/vucut/rowing.jpg">
+            <img src="~/images/ekipmanlar/rowing.jpg">
+            <span>Seated Row</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Biceps Curl"
+             data-aciklama="Ön kol kaslarını izole şekilde çalıştırır."
+         data-gorsel="/images/vucut/biceps.jpg">
+            <img src="~/images/ekipmanlar/biceps.jpg">
+            <span>Biceps Curl</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Triceps Pushdown"
+             data-aciklama="Arka kol kaslarını şekillendirmek için idealdir."
+         data-gorsel="/images/vucut/triceps.jpg">
+            <img src="~/images/ekipmanlar/triceps.jpg">
+            <span>Triceps Pushdown</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Shoulder Press"
+             data-aciklama="Omuz kaslarını ve üst gövde gücünü artırır."
+         data-gorsel="/images/vucut/shoulder.jpg">
+            <img src="~/images/ekipmanlar/shoulder.jpg">
+            <span>Shoulder Press</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Karın Makinesi"
+             data-aciklama="Karın kaslarını hedef alarak core bölgesini güçlendirir."
+         data-gorsel="/images/vucut/abmachine.jpg">
+            <img src="~/images/ekipmanlar/abmachine.jpg">
+            <span>Karın Makinesi</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Back Extension"
+             data-aciklama="Alt sırt kaslarını destekler ve duruşu iyileştirir."
+         data-gorsel="/images/vucut/backextension.jpg">
+            <img src="~/images/ekipmanlar/backextension.jpg">
+            <span>Back Extension</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Hip Thrust"
+             data-aciklama="Kalça kaslarını güçlendirmek için en etkili egzersizlerden biridir."
+         data-gorsel="/images/vucut/hipthrust.jpg">
+            <img src="~/images/ekipmanlar/hipthrust.jpg">
+            <span>Hip Thrust</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Leg Curl"
+             data-aciklama="Arka bacak kaslarını izole eder."
+         data-gorsel="/images/vucut/legcurl.jpg">
+            <img src="~/images/ekipmanlar/legcurl.jpg">
+            <span>Leg Curl</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Leg Extension"
+             data-aciklama="Ön bacak kaslarını güçlendirmeye yardımcı olur."
+         data-gorsel="/images/vucut/legextension.jpg">
+            <img src="~/images/ekipmanlar/legextension.jpg">
+            <span>Leg Extension</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Koşu Bandı"
+             data-aciklama="Kardiyovasküler dayanıklılığı artırır."
+         data-gorsel="/images/vucut/treadmill.jpg">
+            <img src="~/images/ekipmanlar/treadmill.jpg">
+            <span>Koşu Bandı</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Bisiklet"
+             data-aciklama="Alt vücut kaslarını çalıştıran düşük darbeli kardiyo ekipmanıdır."
+         data-gorsel="/images/vucut/bike.jpg">
+            <img src="~/images/ekipmanlar/bike.jpg">
+            <span>Bisiklet</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Eliptik"
+             data-aciklama="Tüm vücudu çalıştıran eklem dostu kardiyo cihazıdır."
+         data-gorsel="/images/vucut/elliptical.jpg">
+            <img src="~/images/ekipmanlar/elliptical.jpg">
+            <span>Eliptik</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Kettlebell"
+             data-aciklama="Fonksiyonel kuvvet ve denge geliştirmede etkilidir."
+         data-gorsel="/images/vucut/kettlebell.jpg">
+            <img src="~/images/ekipmanlar/kettlebell.jpg">
+            <span>Kettlebell</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Dumbbell"
+             data-aciklama="Serbest ağırlıkla kas gelişimini destekler."
+         data-gorsel="/images/vucut/dumbbell.jpg">
+            <img src="~/images/ekipmanlar/dumbbell.jpg">
+            <span>Dumbbell</span>
+        </div>
+
+        <div class="ekipman-kart" onclick="ekipmanTiklandi(this)"
+             data-ad="Barbell"
+             data-aciklama="Büyük kas grupları için temel kuvvet ekipmanıdır."
+         data-gorsel="/images/vucut/barbell.jpg">
+            <img src="~/images/ekipmanlar/barbell.jpg">
+            <span>Barbell</span>
+        </div>
+
+
+    </div>
+
+
+
+
+<!-- 🔹 MODAL -->
+<div id="ekipmanModal" class="modal">
+
+    <div class="modal-icerik">
+
+        <span class="kapat"
+              onclick="document.getElementById('ekipmanModal').style.display='none'">
+            &times;
+        </span>
+
+        <h2 id="modalBaslik"></h2>
+        <p id="modalAciklama"></p>
+
+        <div class="modal-resim-alani">
+            <img id="modalGorsel">
+        </div>
+
+    </div>
+</div>
+
+<!-- 🔹 UYARI -->
+<div id="uyari" class="uyari">
+    Bu içerik sadece <strong>üyelere özeldir</strong>.
+</div>
+
+<script>
+    function ekipmanTiklandi(element) {
+
+        var girisVarMi = @girisYapildiMi.ToString().ToLower();
+
+        if (!girisVarMi) {
+            document.getElementById("uyari").style.display = "block";
+            setTimeout(() => {
+                document.getElementById("uyari").style.display = "none";
+            }, 2500);
+            return;
+        }
+
+        document.getElementById("modalBaslik").innerText =
+            element.getAttribute("data-ad");
+
+        document.getElementById("modalAciklama").innerText =
+            element.getAttribute("data-aciklama");
+
+        document.getElementById("modalGorsel").src =
+            element.getAttribute("data-gorsel");
+
+        document.getElementById("ekipmanModal").style.display = "flex";
+    }
+</script>
