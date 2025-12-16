@@ -22,7 +22,7 @@ namespace proje.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("GirisliSayfa", "Home");
+                return RedirectToAction("RandevuAl", "SporSalonu");
             }
 
             return RedirectToPage("/Account/Login", new { area = "Identity" });

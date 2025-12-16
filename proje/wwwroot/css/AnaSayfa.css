@@ -1,26 +1,73 @@
-﻿.resim-kutu {
+﻿/* ÜST BÜYÜK RESİM */
+
+
+/* Linklerin varsayılan halini sıfırla */
+a {
+    color: inherit; /* Mavi olmasın */
+    text-decoration: none; /* Alt çizgi yok */
+}
+
+    /* Tıklanmış link de renk değiştirmesin */
+    a:visited {
+        color: inherit;
+    }
+
+    /* Sadece mouse üstüne gelince altı çizilsin */
+    a:hover {
+        text-decoration: underline;
+    }
+
+
+.resim-kutu {
     position: relative;
     width: 90%;
-    margin: 0 auto; 
-    text-align: center
+    margin: 0 auto;
 }
 
     .resim-kutu img {
         width: 100%;
-        height: auto;
         display: block;
     }
 
-
 .yazi {
     position: absolute;
-    bottom: 10px;
+    bottom: 700px;
     left: 50%;
+    transform: translateX(-50%);
+    background: pink;
+    padding: 6px 14px;
     color: white;
-    background: rgb(246, 145, 228);
-    padding: 4px 10px; /*Yazıyla arka plan arasında iç boşluk bırakır*/
-    transform: translateX(-50%); /*kendi genişliğinin yarısı kadar sola çeker*/
-    border-radius: 6px; /*Köşeleri yuvarlatır*/
     text-decoration: none;
-    font-weight: 600;
+    border-radius: 6px;
+    font-size: 20px; /* 🔥 Yazıyı büyütür */
+    font-weight: bold;
+}
+
+/* 🔥 KARTLAR ALANI */
+.hizmetler-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+/* YAN YANA OLAN TEK YER BURASI */
+.hizmetler-container {
+    width: 90%;
+    display: flex;
+    gap: 20px;
+}
+
+/* KART */
+.kart {
+    width: 33.33%; /* 🔥 ALTIN NOKTA */
+}
+
+    .kart img {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+.kart-icerik {
+    padding: 10px 0;
 }
