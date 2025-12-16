@@ -1,5 +1,9 @@
 ﻿/* ÜST BÜYÜK RESİM */
 
+body {
+    background-color: #ffe6f0;
+}
+
 
 /* Linklerin varsayılan halini sıfırla */
 a {
@@ -31,7 +35,7 @@ a {
 
 .yazi {
     position: absolute;
-    bottom: 700px;
+    bottom: 70px;
     left: 50%;
     transform: translateX(-50%);
     background: pink;
@@ -70,4 +74,56 @@ a {
 
 .kart-icerik {
     padding: 10px 0;
+}
+
+.reklam {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15%;
+    z-index: 1000;
+}
+
+/* SOL */
+.reklam-sol {
+    left: 10px;
+    animation: solKayma 3s ease-out;
+}
+
+/* SAĞ */
+.reklam-sag {
+    right: 10px;
+    animation: sagKayma 3s ease-out;
+}
+
+/* Resim */
+.reklam img {
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Animasyonlar */
+@keyframes solKayma {
+    from {
+        transform: translate(-100%, -50%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes sagKayma {
+    from {
+        transform: translate(100%, -50%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0, -50%);
+        opacity: 1;
+    }
 }
