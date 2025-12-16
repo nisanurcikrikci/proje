@@ -12,7 +12,7 @@ a {
         color: inherit;
     }
 
-    /* Sadece mouse üstüne gelince altı çizilsin */
+    /* Sadece mouse üsstüne gelince altı çizilsin */
     a:hover {
         text-decoration: underline;
     }
