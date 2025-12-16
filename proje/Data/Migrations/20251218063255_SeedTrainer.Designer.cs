@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using proje.Data;
 
@@ -11,9 +12,11 @@ using proje.Data;
 namespace proje.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251218063255_SeedTrainer")]
+    partial class SeedTrainer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,60 +227,6 @@ namespace proje.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("proje.Models.Hizmet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SureDakika")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Ucret")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hizmetler");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Ad = "Fitness",
-                            SureDakika = 60,
-                            Ucret = 300m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Ad = "Yoga",
-                            SureDakika = 60,
-                            Ucret = 250m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Ad = "Pilates",
-                            SureDakika = 60,
-                            Ucret = 280m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Ad = "CrossFit",
-                            SureDakika = 45,
-                            Ucret = 320m
-                        });
-                });
-
             modelBuilder.Entity("proje.Models.Trainer", b =>
                 {
                     b.Property<int>("Id")
@@ -360,134 +309,6 @@ namespace proje.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("proje.Models.TrainerHizmet", b =>
-                {
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HizmetId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TrainerId", "HizmetId");
-
-                    b.HasIndex("HizmetId");
-
-                    b.ToTable("TrainerHizmet");
-
-                    b.HasData(
-                        new
-                        {
-                            TrainerId = 1,
-                            HizmetId = 1
-                        },
-                        new
-                        {
-                            TrainerId = 2,
-                            HizmetId = 1
-                        },
-                        new
-                        {
-                            TrainerId = 4,
-                            HizmetId = 2
-                        },
-                        new
-                        {
-                            TrainerId = 5,
-                            HizmetId = 3
-                        },
-                        new
-                        {
-                            TrainerId = 3,
-                            HizmetId = 4
-                        });
-                });
-
-            modelBuilder.Entity("proje.Models.TrainerUzmanlik", b =>
-                {
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UzmanlikId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TrainerId", "UzmanlikId");
-
-                    b.HasIndex("UzmanlikId");
-
-                    b.ToTable("TrainerUzmanlik");
-
-                    b.HasData(
-                        new
-                        {
-                            TrainerId = 1,
-                            UzmanlikId = 1
-                        },
-                        new
-                        {
-                            TrainerId = 2,
-                            UzmanlikId = 2
-                        },
-                        new
-                        {
-                            TrainerId = 3,
-                            UzmanlikId = 5
-                        },
-                        new
-                        {
-                            TrainerId = 4,
-                            UzmanlikId = 3
-                        },
-                        new
-                        {
-                            TrainerId = 5,
-                            UzmanlikId = 4
-                        });
-                });
-
-            modelBuilder.Entity("proje.Models.Uzmanlik", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Uzmanlik");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Ad = "Kas Geliştirme"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Ad = "Kilo Verme"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Ad = "Yoga"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Ad = "Pilates"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Ad = "CrossFit"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -537,44 +358,6 @@ namespace proje.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("proje.Models.TrainerHizmet", b =>
-                {
-                    b.HasOne("proje.Models.Hizmet", "Hizmet")
-                        .WithMany()
-                        .HasForeignKey("HizmetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("proje.Models.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hizmet");
-
-                    b.Navigation("Trainer");
-                });
-
-            modelBuilder.Entity("proje.Models.TrainerUzmanlik", b =>
-                {
-                    b.HasOne("proje.Models.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("proje.Models.Uzmanlik", "Uzmanlik")
-                        .WithMany()
-                        .HasForeignKey("UzmanlikId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Trainer");
-
-                    b.Navigation("Uzmanlik");
                 });
 #pragma warning restore 612, 618
         }
