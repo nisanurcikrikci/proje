@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using proje.Data;
+using proje.Models;
+using System.Security.Claims;
 
 namespace proje.Controllers
 {
@@ -83,18 +85,65 @@ namespace proje.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult RandevuAl()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var musteri = _context.Musteriler
+                .FirstOrDefault(m => m.IdentityUserId == userId);
+
+
+            if (musteri.Boy == null || musteri.Kilo == null)
+            {
+                TempData["Hata"] = "Randevu almak için boy ve kilo bilgilerinizi girmeniz gerekir.";
+                return RedirectToAction("Profilim", "Musteri");
+            }
+
+            return View();
+        }
+
         [HttpPost]
         public IActionResult RandevuAl(int trainerId, DateTime tarih, string saat)
         {
-            // ŞİMDİLİK TEST
-            return Ok(new
+            string identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var musteri = _context.Musteriler
+                .FirstOrDefault(m => m.IdentityUserId == identityUserId);
+
+            if (musteri == null)
             {
-                Mesaj = "Randevu başarıyla alındı",
+                return BadRequest("Müşteri bulunamadı");
+            }
+            // Aynı saat dolu mu kontrol (çok önemli ⭐)
+            bool doluMu = _context.Randevular.Any(r =>
+                r.TrainerId == trainerId &&
+                r.Tarih == tarih &&
+                r.Saat == saat
+            );
+
+            if (doluMu)
+            {
+                TempData["Hata"] = "Bu saat dolu, lütfen başka bir saat seçiniz.";
+                return RedirectToAction("RandevuAl");
+            }
+
+            var randevu = new Randevu
+            {
                 TrainerId = trainerId,
-                Tarih = tarih.ToShortDateString(),
-                Saat = saat
-            });
+                MusteriId = musteri.Id,
+                Tarih = tarih,
+                Saat = saat,
+                AktifMi = true
+            };
+
+            _context.Randevular.Add(randevu);
+            _context.SaveChanges();
+
+            TempData["Basarili"] = "Randevu başarıyla alındı.";
+            return RedirectToAction("Index");
         }
+
 
     }
 }

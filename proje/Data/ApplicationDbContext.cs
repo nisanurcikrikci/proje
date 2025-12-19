@@ -10,6 +10,8 @@ namespace proje.Data
             : base(options)
         {
         }
+        public DbSet<Musteri> Musteriler { get; set; }
+        public DbSet<Randevu> Randevular { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Hizmet> Hizmetler { get; set; }
         public DbSet<TrainerHizmet> TrainerHizmet { get; set; }

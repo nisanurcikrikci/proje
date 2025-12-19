@@ -39,92 +39,93 @@
     Randevu Al
 </button>
 
-
 @section Scripts {
     <script>
+        $(document).ready(function () {
 
-        function disableAll() {
-            $("#trainerSelect, #saatSelect, #randevuBtn").prop("disabled", true);
-            $("#trainerSelect").html("<option>Önce hizmet seçiniz</option>");
-            $("#saatSelect").html("<option>Önce tarih seçiniz</option>");
-        }
+            // Başlangıç
+            $("#trainerSelect, #tarihInput, #saatSelect, #randevuBtn")
+                .prop("disabled", true);
 
-        disableAll();
+            // 1️⃣ HİZMET SEÇ → ANTRENÖRLER
+            $("#hizmetSelect").change(function () {
+                let hizmetId = $(this).val();
 
-        // HİZMET SEÇ
-        $("#hizmetSelect").change(function () {
-            let hizmetId = $(this).val();
-            disableAll();
+                $("#trainerSelect").prop("disabled", true).empty()
+                    .append("<option value=''>Yükleniyor...</option>");
+                $("#tarihInput, #saatSelect, #randevuBtn").prop("disabled", true);
 
-            if (!hizmetId) return;
+                if (!hizmetId) return;
 
-            $.get("/Randevu/GetTrainerByHizmet", { hizmetId }, function (data) {
-                $("#trainerSelect").empty().append("<option value=''>Antrenör seçiniz</option>");
+                $.get("/Randevu/GetTrainerByHizmet", { hizmetId }, function (data) {
+                    $("#trainerSelect").empty()
+                        .append("<option value=''>Antrenör seçiniz</option>");
 
-                data.forEach(t => {
-                    $("#trainerSelect").append(`<option value="${t.id}">${t.adSoyad}</option>`);
+                    data.forEach(t => {
+                        $("#trainerSelect").append(
+                            `<option value="${t.id}">${t.adSoyad}</option>`
+                        );
+                    });
+
+                    $("#trainerSelect").prop("disabled", false);
                 });
-
-                $("#trainerSelect").prop("disabled", false);
-                    $("#tarihInput").prop("disabled", false);
             });
-            }
-        });
 
-        // ANTRENÖR SEÇ → TARİH AKTİF
-        $("#trainerSelect").change(function () {
-            $("#saatSelect, #randevuBtn").prop("disabled", true);
-        });
+            // 2️⃣ ANTRENÖR SEÇ → TARİH AKTİF
+            $("#trainerSelect").change(function () {
+                let trainerId = $(this).val();
 
-        // TARİH SEÇ → BOŞ SAATLER
-        $("#tarihInput").change(function () {
-            let trainerId = $("#trainerSelect").val();
-            let tarih = $(this).val();
+                $("#tarihInput").prop("disabled", !trainerId);
+                $("#saatSelect, #randevuBtn").prop("disabled", true);
+            });
 
-            if (!trainerId || !tarih) return;
+            // 3️⃣ TARİH SEÇ → SAATLER
+            $("#tarihInput").change(function () {
+                let trainerId = $("#trainerSelect").val();
+                let tarih = $(this).val();
 
-            $("#saatSelect").prop("disabled", true)
-                            .html("<option>Yükleniyor...</option>");
+                if (!trainerId || !tarih) return;
 
-            $.get("/Randevu/GetUygunSaatler", { trainerId, tarih }, function (saatler) {
+                $("#saatSelect").prop("disabled", true)
+                    .empty().append("<option>Yükleniyor...</option>");
 
-                $("#saatSelect").empty().append("<option value=''>Saat seçiniz</option>");
+                $.get("/Randevu/GetUygunSaatler",
+                    { trainerId, tarih },
+                    function (saatler) {
 
-                saatler.forEach(saat => {
-                    $("#saatSelect").append(`<option value="${saat}">${saat}</option>`);
+                        $("#saatSelect").empty()
+                            .append("<option value=''>Saat seçiniz</option>");
+
+                        saatler.forEach(s => {
+                            $("#saatSelect").append(
+                                `<option value="${s}">${s}</option>`
+                            );
+                        });
+
+                        $("#saatSelect").prop("disabled", false);
+                    });
+            });
+
+            // 4️⃣ SAAT SEÇ → BUTON AKTİF
+            $("#saatSelect").change(function () {
+                $("#randevuBtn").prop("disabled", !$(this).val());
+            });
+
+            // 5️⃣ RANDEVU AL
+            $("#randevuBtn").click(function () {
+                $.post("/Randevu/RandevuAl", {
+                    trainerId: $("#trainerSelect").val(),
+                    tarih: $("#tarihInput").val(),
+                    saat: $("#saatSelect").val()
+                }, function () {
+                    alert("Randevu başarıyla alındı");
                 });
-
-                $("#saatSelect").prop("disabled", false);
             });
-            }
-        }
-        $("#trainerSelect").change(function () 
-        {
-            saatleriGetir();
+
         });
-
-        $("#tarihInput").change(function () {
-            saatleriGetir();
-        });
-
-        // SAAT SEÇ → BUTON AKTİF
-        $("#saatSelect").change(function () {
-            $("#randevuBtn").prop("disabled", !$(this).val());
-        });
-
-        // RANDEVU AL
-        $("#randevuBtn").click(function () {
-
-            $.post("/Randevu/RandevuAl", {
-                trainerId: $("#trainerSelect").val(),
-                tarih: $("#tarihInput").val(),
-                saat: $("#saatSelect").val()
-            }, function (res) {
-                alert(res.mesaj);
-            });
-        });
-
     </script>
+}
+
 }
 
 

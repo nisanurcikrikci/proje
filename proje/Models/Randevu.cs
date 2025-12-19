@@ -16,7 +16,7 @@ namespace proje.Models
 
         // navigation (opsiyonel ama güzel)
         public Trainer Trainer { get; set; }
-        public Kullanici Musteri { get; set; }
+        public Musteri Musteri { get; set; }
     }
 
 }

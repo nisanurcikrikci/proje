@@ -1,0 +1,80 @@
+﻿@model Musteri
+
+<h2>Profilim</h2>
+
+@if (ViewBag.Mesaj != null)
+{
+    <div class="alert alert-success">@ViewBag.Mesaj</div>
+}
+
+<form asp-action="Profilim" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Ad Soyad</label>
+        <input asp-for="AdSoyad" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>E-posta</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Telefon</label>
+        <input asp-for="Telefon" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Boy (cm)</label>
+        <input asp-for="Boy" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Kilo (kg)</label>
+        <input asp-for="Kilo" class="form-control" />
+    </div>
+
+    <!-- Odak Alanı -->
+    <div class="mb-3">
+        <label>Odaklanmak İstediğin Alan</label>
+        <select asp-for="OdaklanilanAlan" class="form-select">
+            <option value="">Seçiniz</option>
+            <option value="Kilo Verme">Kilo Verme</option>
+            <option value="Kas Geliştirme">Kas Geliştirme</option>
+            <option value="Kardiyo">Kardiyo</option>
+            <option value="Esneklik">Esneklik</option>
+            <option value="Rehabilitasyon">Rehabilitasyon</option>
+        </select>
+    </div>
+
+    <div id="alanBilgi" class="alert alert-info" style="display:none;"></div>
+
+    <button type="submit" class="btn btn-primary">Bilgileri Güncelle</button>
+</form>
+
+<hr />
+
+<h4>Randevularım</h4>
+
+@if (Model.Randevular == null || !Model.Randevular.Any())
+{
+    <div class="alert alert-secondary">
+        Henüz randevunuz bulunmamaktadır.
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            @foreach (var r in Model.Randevular)
+            {
+                <div class="border-bottom pb-2 mb-2">
+                    <strong>@r.Tarih.ToShortDateString()</strong> - @r.Saat <br />
+                    Trainer: @r.Trainer.AdSoyad <br />
+                    Durum: @(r.AktifMi ? "Aktif" : "İptal")
+                </div>
+            }
+        </div>
+    </div>
+}
