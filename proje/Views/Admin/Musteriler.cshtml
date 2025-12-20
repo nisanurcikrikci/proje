@@ -39,17 +39,34 @@
                 <td>@m.Boy</td>
                 <td>@m.Kilo</td>
                 <td>@m.OdaklanilanAlan</td>
+                
                 <td>
-                    <form asp-action="TrainerEkle" method="post">
+                    <!-- Antrenör Yap -->
+                    <form asp-action="TrainerEkle"
+                          method="post"
+                          style="display:inline">
                         <input type="hidden" name="userId" value="@m.IdentityUserId" />
-
                         <button type="submit"
                                 class="btn btn-sm btn-primary"
                                 onclick="return confirm('Bu kullanıcıyı antrenör yapmak istiyor musunuz?')">
                             Antrenör Yap
                         </button>
                     </form>
+
+                    <!-- Müşteri Sil -->
+                    <form asp-action="MusteriSil"
+                          method="post"
+                          style="display:inline">
+                        <input type="hidden" name="id" value="@m.Id" />
+                        <button type="submit"
+                                class="btn btn-sm btn-danger"
+                                onclick="return confirm('Bu müşteri ve tüm randevuları silinsin mi?')">
+                            Sil
+                        </button>
+                    </form>
                 </td>
+
+                
             </tr>
         }
     </tbody>

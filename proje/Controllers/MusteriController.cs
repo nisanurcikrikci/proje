@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using proje.Data;
@@ -59,5 +60,34 @@ namespace proje.Controllers
             ViewBag.Mesaj = "Profil başarıyla güncellendi";
             return View(musteri);
         }
+       
+        [HttpPost]
+        public async Task<IActionResult> RandevuIptal(int id)
+        {
+            var randevu = await _context.Randevular.FindAsync(id);
+            if (randevu == null)
+                return NotFound();
+
+            var userEmail = User.Identity.Name;
+
+            var musteri = await _context.Musteriler
+                .FirstOrDefaultAsync(x => x.Email == userEmail);
+
+            if (musteri == null)
+                return Unauthorized();
+
+            if (randevu.MusteriId != musteri.Id)
+                return Unauthorized();
+
+            if (randevu.Durum == "Beklemede" || randevu.Durum == "Aktif")
+            {
+                randevu.Durum = "Iptal";
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "Randevu");
+
+        }
+
     }
 }

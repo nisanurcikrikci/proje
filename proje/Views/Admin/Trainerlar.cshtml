@@ -2,17 +2,33 @@
 
 <h3>Antrenörler</h3>
 
-<table class="table">
-    <tr>
-        <th>Ad Soyad</th>
-        <th>Aktif mi</th>
-    </tr>
-
-    @foreach (var t in Model)
-    {
+<table class="table table-bordered">
+    <thead>
         <tr>
-            <td>@t.AdSoyad</td>
-            <td>@(t.AktifMi ? "Evet" : "Hayır")</td>
+            <th>Ad Soyad</th>
+            <th>Aktif mi</th>
+            <th>İşlem</th>
         </tr>
-    }
+    </thead>
+
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.AdSoyad</td>
+                <td>@(t.AktifMi ? "Evet" : "Hayır")</td>
+                <td>
+                    <form asp-action="TrainerSil"
+                          method="post"
+                          style="display:inline"
+                          onsubmit="return confirm('Eğitmen ve tüm randevuları silinsin mi?');">
+                        <input type="hidden" name="id" value="@t.Id" />
+                        <button class="btn btn-danger btn-sm">
+                            Sil
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

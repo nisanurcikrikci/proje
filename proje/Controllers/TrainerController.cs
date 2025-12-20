@@ -76,7 +76,7 @@ namespace proje.Controllers
                 return Unauthorized(); // veya özel bir hata sayfası
 
             var randevular = _context.Randevular
-                .Where(r => r.TrainerId == trainer.Id && r.Durum=="Aktif")
+                .Where(r => r.TrainerId == trainer.Id && r.Durum!="Iptal")
             .Include(r => r.Musteri)
             .Where(r => r.TrainerId == trainer.Id)
             .OrderBy(r => r.Tarih)

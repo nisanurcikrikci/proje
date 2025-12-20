@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using proje.Data;
@@ -13,6 +13,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // 🔹 IDENTITY + ROLE DESTEĞİ (ÇOK ÖNEMLİ)
@@ -20,6 +22,12 @@ builder.Services
     .AddIdentity<IdentityUser, IdentityRole>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
+        options.Password.RequireDigit = false;          // Rakam zorunlu mu?
+        options.Password.RequireLowercase = false;      // Küçük harf
+        options.Password.RequireUppercase = false;      // Büyük harf
+        options.Password.RequireNonAlphanumeric = false; // Özel karakter
+        options.Password.RequiredLength = 2;            // Min uzunluk
+        options.Password.RequiredUniqueChars = 1;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -68,7 +76,7 @@ using (var scope = app.Services.CreateScope())
     }
 
     // 🔹 Admin kullanıcıya rol ver
-    var adminUser = await userManager.FindByEmailAsync("admin@sau.com");
+    var adminUser = await userManager.FindByEmailAsync("b231210044@sakarya.edu.tr");
     if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
     {
         await userManager.AddToRoleAsync(adminUser, "Admin");

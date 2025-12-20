@@ -29,7 +29,7 @@
     <button class="btn btn-outline-warning filter-btn" data-filter="Beklemede">
         Bekleyen Randevular
     </button>
-    <button class="btn btn-outline-secondary filter-btn" data-filter="İptal">
+    <button class="btn btn-outline-secondary filter-btn" data-filter="Iptal">
         İptal Edilenler
     </button>
 </div>
@@ -50,6 +50,7 @@ else
                 <th>Saat</th>
                 <th>Antrenör</th>
                 <th>Durum</th>
+                <th>İşlem</th>
             </tr>
         </thead>
         <tbody>
@@ -71,11 +72,32 @@ else
                         {
                             <span class="badge bg-success">Aktif</span>
                         }
+                        else if (r.Durum == "Iptal")
+                        {
+                            <span class="badge bg-secondary">İptal Edildi</span>
+                        }
                         else
                         {
-                            <span class="badge bg-secondary">Bilinmiyor</span>
+                            <span class="badge bg-dark">Bilinmiyor</span>
+                        }
+
+                    </td>
+                    <td>
+                        @if (r.Durum == "Beklemede" || r.Durum == "Aktif")
+                        {
+                            <form asp-action="RandevuIptal"
+                                  asp-controller="Musteri"
+                                  method="post"
+                                  style="display:inline">
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button class="btn btn-danger btn-sm">
+                                    İptal Et
+                                </button>
+                            </form>
+
                         }
                     </td>
+
                 </tr>
             }
         </tbody>

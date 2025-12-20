@@ -99,7 +99,53 @@ namespace proje.Controllers
             TempData["Basarili"] = "Kullanıcı antrenör yapıldı.";
             return RedirectToAction("Trainerlar");
         }
+        [HttpPost]
+        public async Task<IActionResult> TrainerSil(int id)
+        {
+            var trainer = await _context.Trainers
+                .Include(t => t.Randevular)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
+            if (trainer == null)
+                return NotFound();
+
+            // 🔴 Önce bu eğitmene ait randevular silinir (LINQ)
+            var randevular = _context.Randevular
+                .Where(r => r.TrainerId == id);
+
+            _context.Randevular.RemoveRange(randevular);
+
+            // 🔴 Eğitmeni sil
+            _context.Trainers.Remove(trainer);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Trainerlar");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MusteriSil(int id)
+        {
+            var musteri = await _context.Musteriler
+                .Include(m => m.Randevular)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (musteri == null)
+                return NotFound();
+
+            // 🔴 Önce müşterinin randevuları silinir
+            var randevular = _context.Randevular
+                .Where(r => r.MusteriId == id);
+
+            _context.Randevular.RemoveRange(randevular);
+
+            // 🔴 Müşteriyi sil
+            _context.Musteriler.Remove(musteri);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Musteriler");
+        }
 
     }
 }
