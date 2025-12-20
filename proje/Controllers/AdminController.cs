@@ -68,32 +68,33 @@ namespace proje.Controllers
             if (user == null)
                 return NotFound();
 
-            // 🔹 Zaten trainer mı?
-            bool zatenTrainer = _context.Trainers
-                .Any(t => t.IdentityUserId == user.Id);
-
-            if (zatenTrainer)
+            if (await _userManager.IsInRoleAsync(user, "Musteri"))
             {
-                TempData["Hata"] = "Bu kullanıcı zaten antrenör.";
-                return RedirectToAction("Musteriler");
+                await _userManager.RemoveFromRoleAsync(user, "Musteri");
             }
 
-            // 🔹 Role ata
+            // 🔥 2️⃣ Trainer rolünü EKLE
             if (!await _userManager.IsInRoleAsync(user, "Trainer"))
             {
                 await _userManager.AddToRoleAsync(user, "Trainer");
             }
 
-            // 🔹 Trainer tablosuna ekle
-            var trainer = new Trainer
-            {
-                AdSoyad = user.Email,
-                AktifMi = true,
-                IdentityUserId = user.Id
-            };
 
-            _context.Trainers.Add(trainer);
-            await _context.SaveChangesAsync();
+            bool trainerVarMi = _context.Trainers
+    .Any(t => t.IdentityUserId == user.Id);
+
+            if (!trainerVarMi)
+            {
+                var trainer = new Trainer
+                {
+                    AdSoyad = user.Email, // sonra düzenlersin
+                    AktifMi = true,
+                    IdentityUserId = user.Id
+                };
+
+                _context.Trainers.Add(trainer);
+                await _context.SaveChangesAsync();
+            }
 
             TempData["Basarili"] = "Kullanıcı antrenör yapıldı.";
             return RedirectToAction("Trainerlar");

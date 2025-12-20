@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using proje.Data;
 
@@ -11,9 +12,11 @@ using proje.Data;
 namespace proje.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251220140430_Guncelleme")]
+    partial class Guncelleme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -383,69 +386,9 @@ namespace proje.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trainers");
+                    b.HasIndex("IdentityUserId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AdSoyad = "Ahmet Yılmaz",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AdSoyad = "Elif Kaya",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AdSoyad = "Mert Demir",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AdSoyad = "Zeynep Arslan",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AdSoyad = "Can Öztürk",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AdSoyad = "Ayşe Çelik",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 7,
-                            AdSoyad = "Burak Koç",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 8,
-                            AdSoyad = "Derya Şahin",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 9,
-                            AdSoyad = "Emre Aydın",
-                            AktifMi = true
-                        },
-                        new
-                        {
-                            Id = 10,
-                            AdSoyad = "Selin Karaca",
-                            AktifMi = true
-                        });
+                    b.ToTable("Trainers");
                 });
 
             modelBuilder.Entity("proje.Models.TrainerHizmet", b =>
@@ -710,11 +653,6 @@ namespace proje.Data.Migrations
             modelBuilder.Entity("proje.Models.Uzmanlik", b =>
                 {
                     b.Navigation("TrainerUzmanlik");
-                });
-
-            modelBuilder.Entity("proje.Models.Trainer", b =>
-                {
-                    b.Navigation("Randevular");
                 });
 #pragma warning restore 612, 618
         }

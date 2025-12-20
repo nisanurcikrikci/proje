@@ -1,0 +1,37 @@
+﻿@model Trainer
+@{
+    var uzmanliklar = ViewBag.Uzmanliklar as List<Uzmanlik>;
+}
+
+<h3>Profilim</h3>
+
+<form method="post">
+
+    <div class="mb-3">
+        <label>Boy (cm)</label>
+        <input type="number" name="boy" value="@Model.Boy" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Kilo (kg)</label>
+        <input type="number" name="kilo" value="@Model.Kilo" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Uzmanlık Alanları</label>
+
+        @foreach (var u in uzmanliklar)
+        {
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="uzmanliklar"
+                       value="@u.Id"
+                       @(Model.TrainerUzmanliklar.Any(tu => tu.UzmanlikId == u.Id) ? "checked" : "") />
+                <label class="form-check-label">@u.Ad</label>
+            </div>
+        }
+    </div>
+
+    <button class="btn btn-success">Kaydet</button>
+</form>

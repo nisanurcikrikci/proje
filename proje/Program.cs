@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using proje.Data;
+using proje.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,8 @@ builder.Services
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

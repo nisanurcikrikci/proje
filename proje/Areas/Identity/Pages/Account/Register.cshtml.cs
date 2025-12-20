@@ -34,14 +34,18 @@ namespace proje.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            ApplicationDbContext context)
+    UserManager<IdentityUser> userManager,
+    IUserStore<IdentityUser> userStore,
+    SignInManager<IdentityUser> signInManager,
+    ILogger<RegisterModel> logger,
+    IEmailSender emailSender,
+    ApplicationDbContext context,
+    RoleManager<IdentityRole> roleManager
+)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,7 +54,9 @@ namespace proje.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _roleManager = roleManager;
         }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -122,6 +128,10 @@ namespace proje.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // 🔹 ROLE ATA (ÇOK ÖNEMLİ)
+                    await _userManager.AddToRoleAsync(user, "Musteri");
+
+                    // 🔹 MUSTERI TABLOSUNA EKLE
                     var musteri = new Musteri
                     {
                         AdSoyad = Input.AdSoyad,
@@ -133,27 +143,12 @@ namespace proje.Areas.Identity.Pages.Account
                     _context.Musteriler.Add(musteri);
                     _context.SaveChanges();
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-
+                    // 🔹 DİREKT GİRİŞ YAPTIR
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
                     return RedirectToAction("Profilim", "Musteri");
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

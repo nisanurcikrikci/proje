@@ -1,36 +1,55 @@
-﻿@model IEnumerable<proje.Models.Randevu>
+﻿@model List<Randevu>
 
-@{
-    ViewData["Title"] = "Randevularım";
-}
+<h3>Randevularım</h3>
 
 <h2 class="mb-4">Randevularım</h2>
 
 @if (!Model.Any())
 {
     <div class="alert alert-info">
-        Henüz atanmış bir randevunuz bulunmamaktadır.
+        Henüz randevunuz yok.
     </div>
 }
 else
 {
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Tarih</th>
                 <th>Saat</th>
                 <th>Müşteri</th>
-                <th>Telefon</th>
+                <th>Ücret</th>
+                <th>Ödeme</th>
+                <th>Durum</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var randevu in Model)
+            @foreach (var r in Model)
             {
                 <tr>
-                    <td>@randevu.Tarih.ToString("dd.MM.yyyy")</td>
-                    <td>@randevu.BaslangicSaat - @randevu.BitisSaat</td>
-                    <td>@randevu.Musteri?.AdSoyad</td>
-                    <td>@randevu.Musteri?.Telefon</td>
+                    <td>@r.Tarih.ToShortDateString()</td>
+                    <td>@r.BaslangicSaat:00 - @r.BitisSaat:00</td>
+                    <td>@r.Musteri.AdSoyad</td>
+                    <td>@r.Ucret ₺</td>
+                    <td>@r.OdemeTipi</td>
+                    <td>
+                        @if (r.Durum == "Beklemede")
+                        {
+                            <form asp-action="Onayla" method="post" style="display:inline">
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button class="btn btn-success btn-sm">Onayla</button>
+                            </form>
+
+                            <form asp-action="Reddet" method="post" style="display:inline">
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button class="btn btn-danger btn-sm">Reddet</button>
+                            </form>
+                        }
+                        else if (r.Durum == "Aktif")
+                        {
+                            <span class="badge bg-success">Aktif</span>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

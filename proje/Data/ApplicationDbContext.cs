@@ -16,6 +16,7 @@ namespace proje.Data
         public DbSet<Hizmet> Hizmetler { get; set; }
         public DbSet<TrainerHizmet> TrainerHizmet { get; set; }
         public DbSet<TrainerUzmanlik> TrainerUzmanlik { get; set; }
+        public DbSet<Uzmanlik> Uzmanlik { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
