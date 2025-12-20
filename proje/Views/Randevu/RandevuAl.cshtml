@@ -1,0 +1,165 @@
+﻿@{
+    ViewData["Title"] = "Randevu Al";
+    var hizmetler = ViewBag.Hizmetler;
+}
+
+<h2 class="mb-4">Randevu Al</h2>
+
+<form asp-action="RandevuAl" method="post">
+
+    <div class="row">
+
+        <!-- SOL TARAF -->
+        <div class="col-md-8">
+
+            <!-- HİZMET -->
+            <div class="mb-3">
+                <label>Hizmet</label>
+                <select id="hizmetSelect" class="form-select">
+                    <option value="">Seçiniz</option>
+                    @foreach (var h in hizmetler)
+                    {
+                        <option value="@h.Id" data-ucret="@h.Ucret">
+                            @h.Ad (@h.Ucret ₺ / saat)
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- TRAINER -->
+            <div class="mb-3">
+                <label>Antrenör</label>
+                <select name="trainerId" id="trainerSelect" class="form-select">
+                    <option value="">Seçiniz</option>
+                </select>
+            </div>
+
+            <!-- TARİH -->
+            <div class="mb-3">
+                <label>Tarih</label>
+                <input type="date" name="tarih" id="tarihInput" class="form-control" />
+            </div>
+
+            <!-- SAAT -->
+            <div class="row">
+                <div class="col">
+                    <label>Başlangıç</label>
+                    <select name="baslangicSaat" id="baslangicSaat" class="form-select">
+                        @for (int i = 9; i < 18; i++)
+                        {
+                            <option value="@i">@i:00</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label>Bitiş</label>
+                    <select name="bitisSaat" id="bitisSaat" class="form-select">
+                        @for (int i = 10; i <= 18; i++)
+                        {
+                            <option value="@i">@i:00</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <br />
+
+            <button type="button" class="btn btn-success" id="devamBtn">
+                Devam Et
+            </button>
+
+        </div>
+
+        <!-- SAĞ TARAF – ÜCRET -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Ücret Bilgisi</h5>
+                    <p>Saatlik: <strong id="saatlikUcret">0</strong> ₺</p>
+                    <hr />
+                    <p>Toplam: <strong id="toplamUcret">0</strong> ₺</p>
+                    <input type="hidden" name="ucret" id="ucretInput" />
+                    <input type="hidden" name="odemeTipi" id="odemeTipi" />
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<!-- ÖDEME MODAL -->
+<div class="modal fade" id="odemeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Ödeme Seçimi</h5>
+            </div>
+
+            <div class="modal-body">
+                <button class="btn btn-outline-success w-100 mb-2" id="nakitBtn">
+                    💵 Nakit
+                </button>
+                <button class="btn btn-outline-primary w-100" id="onlineBtn">
+                    💳 Online (Fake)
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let saatlik = 0;
+
+        $("#hizmetSelect").change(function () {
+            let hizmetId = $(this).val();
+            saatlik = $(this).find(":selected").data("ucret") || 0;
+            $("#saatlikUcret").text(saatlik);
+
+            $("#trainerSelect").empty().append("<option>Yükleniyor...</option>");
+
+            $.get("/Randevu/GetTrainerByHizmet", { hizmetId }, function (data) {
+                $("#trainerSelect").empty().append("<option value=''>Seçiniz</option>");
+                data.forEach(t => {
+                    $("#trainerSelect").append(
+                        `<option value="${t.id}">${t.adSoyad}</option>`
+                    );
+                });
+            });
+
+            hesapla();
+        });
+
+        $("#baslangicSaat, #bitisSaat").change(hesapla);
+
+        function hesapla() {
+            let bas = parseInt($("#baslangicSaat").val());
+            let bit = parseInt($("#bitisSaat").val());
+
+            if (bit > bas) {
+                let toplam = (bit - bas) * saatlik;
+                $("#toplamUcret").text(toplam);
+                $("#ucretInput").val(toplam);
+            }
+        }
+
+        $("#devamBtn").click(function () {
+            $("#odemeModal").modal("show");
+        });
+
+               $("#nakitBtn").click(function () {
+            $("#odemeTipi").val("Nakit");
+            $("form").submit();
+        });
+
+        $("#onlineBtn").click(function () {
+            $("#odemeTipi").val("Online");
+            $("form").submit();
+        });
+
+    </script>
+}

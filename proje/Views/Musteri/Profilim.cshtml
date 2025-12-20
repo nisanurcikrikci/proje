@@ -55,26 +55,3 @@
 
 <hr />
 
-<h4>Randevularım</h4>
-
-@if (Model.Randevular == null || !Model.Randevular.Any())
-{
-    <div class="alert alert-secondary">
-        Henüz randevunuz bulunmamaktadır.
-    </div>
-}
-else
-{
-    <div class="card">
-        <div class="card-body">
-            @foreach (var r in Model.Randevular)
-            {
-                <div class="border-bottom pb-2 mb-2">
-                    <strong>@r.Tarih.ToShortDateString()</strong> - @r.Saat <br />
-                    Trainer: @r.Trainer.AdSoyad <br />
-                    Durum: @(r.AktifMi ? "Aktif" : "İptal")
-                </div>
-            }
-        </div>
-    </div>
-}

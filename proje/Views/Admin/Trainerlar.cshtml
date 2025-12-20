@@ -1,0 +1,18 @@
+﻿@model List<Trainer>
+
+<h3>Antrenörler</h3>
+
+<table class="table">
+    <tr>
+        <th>Ad Soyad</th>
+        <th>Aktif mi</th>
+    </tr>
+
+    @foreach (var t in Model)
+    {
+        <tr>
+            <td>@t.AdSoyad</td>
+            <td>@(t.AktifMi ? "Evet" : "Hayır")</td>
+        </tr>
+    }
+</table>

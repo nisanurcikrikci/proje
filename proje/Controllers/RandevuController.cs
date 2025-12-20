@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using proje.Data;
 using proje.Models;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 
 namespace proje.Controllers
 {
+    [Authorize]
     public class RandevuController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -14,16 +16,21 @@ namespace proje.Controllers
         {
             _context = context;
         }
+
+        // 🔹 Kullanıcının randevuları
         public IActionResult Index()
         {
-            var hizmetler = _context.Hizmetler
-                .OrderBy(h => h.Ad)
-                .ToList();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ViewBag.Hizmetler = hizmetler;
-            return View();
+            var musteri = _context.Musteriler
+                .Include(m => m.Randevular)
+                    .ThenInclude(r => r.Trainer)
+                .FirstOrDefault(m => m.IdentityUserId == userId);
+
+            return View(musteri);
         }
 
+        // 🔹 Hizmete göre trainer getir
         [HttpGet]
         public IActionResult GetTrainerByHizmet(int hizmetId)
         {
@@ -40,51 +47,9 @@ namespace proje.Controllers
 
             return Json(trainerlar);
         }
-        [HttpGet]
-        public IActionResult GetUygunTarihler(int trainerId)
-        {
-            var bugun = DateTime.Today;
-            var gunler = new List<string>();
 
-            for (int i = 0; i < 14; i++)
-            {
-                var tarih = bugun.AddDays(i);
-                gunler.Add(tarih.ToString("yyyy-MM-dd"));
-            }
-
-            return Json(gunler);
-        }
-
-
-
-
-        [HttpGet]
-        public IActionResult GetUygunSaatler(int trainerId, DateTime tarih)
-        {
-            var calismaSaatleri = new List<string>
-    {
-        "09:00","10:00","11:00","12:00","13:00",
-        "14:00","15:00","16:00","17:00"
-    };
-
-            var doluSaatler = _context.Randevular
-                .Where(r => r.TrainerId == trainerId && r.Tarih == tarih)
-                .Select(r => r.Saat)
-                .ToList();
-
-            var bosSaatler = calismaSaatleri
-                .Except(doluSaatler)
-                .ToList();
-
-            return Json(bosSaatler);
-        }
-
-        public IActionResult Test()
-        {
-            return Content("Randevu Controller Çalışıyor");
-        }
-
-
+        // 🔹 Randevu alma sayfası
+        // 🔹 Randevu alma sayfası
         [HttpGet]
         public IActionResult RandevuAl()
         {
@@ -93,6 +58,8 @@ namespace proje.Controllers
             var musteri = _context.Musteriler
                 .FirstOrDefault(m => m.IdentityUserId == userId);
 
+            if (musteri == null)
+                return Unauthorized();
 
             if (musteri.Boy == null || musteri.Kilo == null)
             {
@@ -100,31 +67,49 @@ namespace proje.Controllers
                 return RedirectToAction("Profilim", "Musteri");
             }
 
+            // 🔥 İŞTE BURAYA
+            var hizmetler = _context.Hizmetler.ToList();
+            ViewBag.Hizmetler = hizmetler;
+
             return View();
         }
 
+
+        // 🔹 Randevu oluştur (POST)
         [HttpPost]
-        public IActionResult RandevuAl(int trainerId, DateTime tarih, string saat)
+        public IActionResult RandevuAl(
+     int trainerId,
+     DateTime tarih,
+     int baslangicSaat,
+     int bitisSaat,
+     decimal ucret,
+     string odemeTipi
+ )
         {
-            string identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var musteri = _context.Musteriler
-                .FirstOrDefault(m => m.IdentityUserId == identityUserId);
+                .FirstOrDefault(m => m.IdentityUserId == userId);
 
             if (musteri == null)
+                return BadRequest();
+
+            if (bitisSaat <= baslangicSaat)
             {
-                return BadRequest("Müşteri bulunamadı");
+                TempData["Hata"] = "Saat aralığı hatalı";
+                return RedirectToAction("RandevuAl");
             }
-            // Aynı saat dolu mu kontrol (çok önemli ⭐)
+
             bool doluMu = _context.Randevular.Any(r =>
                 r.TrainerId == trainerId &&
                 r.Tarih == tarih &&
-                r.Saat == saat
+                baslangicSaat < r.BitisSaat &&
+                bitisSaat > r.BaslangicSaat
             );
 
             if (doluMu)
             {
-                TempData["Hata"] = "Bu saat dolu, lütfen başka bir saat seçiniz.";
+                TempData["Hata"] = "Bu saat dolu";
                 return RedirectToAction("RandevuAl");
             }
 
@@ -133,17 +118,18 @@ namespace proje.Controllers
                 TrainerId = trainerId,
                 MusteriId = musteri.Id,
                 Tarih = tarih,
-                Saat = saat,
-                AktifMi = true
+                BaslangicSaat = baslangicSaat,
+                BitisSaat = bitisSaat,
+                Ucret = ucret,
+                OdemeTipi = odemeTipi,
+                Durum = "Beklemede"
             };
 
             _context.Randevular.Add(randevu);
             _context.SaveChanges();
 
-            TempData["Basarili"] = "Randevu başarıyla alındı.";
             return RedirectToAction("Index");
         }
-
 
     }
 }

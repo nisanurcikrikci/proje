@@ -7,16 +7,24 @@ namespace proje.Models
         public int Id { get; set; }
 
         public int TrainerId { get; set; }
-        public int MusteriId { get; set; }   // Üye
+        public int MusteriId { get; set; }
 
         public DateTime Tarih { get; set; }
-        public string Saat { get; set; }
 
-        public bool AktifMi { get; set; } = true;
+        public int BaslangicSaat { get; set; } // 9, 10, 11
+        public int BitisSaat { get; set; }     // 13, 14
 
-        // navigation (opsiyonel ama güzel)
+
+        public decimal Ucret { get; set; }
+
+        public string OdemeTipi { get; set; } // Nakit / Online
+
+        public string Durum { get; set; } = "Beklemede";
+        // Beklemede | Aktif | Iptal
+
         public Trainer Trainer { get; set; }
         public Musteri Musteri { get; set; }
     }
+
 
 }

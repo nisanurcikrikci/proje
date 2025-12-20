@@ -1,0 +1,56 @@
+﻿@model List<Musteri>
+
+<h3>Müşteriler</h3>
+
+@if (TempData["Basarili"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Basarili"]
+    </div>
+}
+
+@if (TempData["Hata"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Hata"]
+    </div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ad Soyad</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Boy</th>
+            <th>Kilo</th>
+            <th>Odak</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.AdSoyad</td>
+                <td>@m.Email</td>
+                <td>@m.Telefon</td>
+                <td>@m.Boy</td>
+                <td>@m.Kilo</td>
+                <td>@m.OdaklanilanAlan</td>
+                <td>
+                    <form asp-action="TrainerEkle" method="post">
+                        <input type="hidden" name="userId" value="@m.IdentityUserId" />
+
+                        <button type="submit"
+                                class="btn btn-sm btn-primary"
+                                onclick="return confirm('Bu kullanıcıyı antrenör yapmak istiyor musunuz?')">
+                            Antrenör Yap
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

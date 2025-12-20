@@ -29,18 +29,7 @@ namespace proje.Data
             modelBuilder.Entity<TrainerUzmanlik>()
                 .HasKey(tu => new { tu.TrainerId, tu.UzmanlikId });
 
-            modelBuilder.Entity<Trainer>().HasData(
-                new Trainer { Id = 1, AdSoyad = "Ahmet Yılmaz", AktifMi = true },
-                new Trainer { Id = 2, AdSoyad = "Elif Kaya", AktifMi = true },
-                new Trainer { Id = 3, AdSoyad = "Mert Demir", AktifMi = true },
-                new Trainer { Id = 4, AdSoyad = "Zeynep Arslan", AktifMi = true },
-                new Trainer { Id = 5, AdSoyad = "Can Öztürk", AktifMi = true },
-                new Trainer { Id = 6, AdSoyad = "Ayşe Çelik", AktifMi = true },
-                new Trainer { Id = 7, AdSoyad = "Burak Koç", AktifMi = true },
-                new Trainer { Id = 8, AdSoyad = "Derya Şahin", AktifMi = true },
-                new Trainer { Id = 9, AdSoyad = "Emre Aydın", AktifMi = true },
-                new Trainer { Id = 10, AdSoyad = "Selin Karaca", AktifMi = true }
-            );
+  
 
             modelBuilder.Entity<Uzmanlik>().HasData(
     new Uzmanlik { Id = 1, Ad = "Kas Geliştirme" },

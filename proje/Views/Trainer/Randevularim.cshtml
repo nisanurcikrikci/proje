@@ -1,0 +1,38 @@
+﻿@model IEnumerable<proje.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Randevularım";
+}
+
+<h2 class="mb-4">Randevularım</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Henüz atanmış bir randevunuz bulunmamaktadır.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>Saat</th>
+                <th>Müşteri</th>
+                <th>Telefon</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var randevu in Model)
+            {
+                <tr>
+                    <td>@randevu.Tarih.ToString("dd.MM.yyyy")</td>
+                    <td>@randevu.BaslangicSaat - @randevu.BitisSaat</td>
+                    <td>@randevu.Musteri?.AdSoyad</td>
+                    <td>@randevu.Musteri?.Telefon</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

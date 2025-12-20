@@ -1,131 +1,124 @@
-﻿@{
-    ViewData["Title"] = "Randevu Al";
-    var hizmetler = ViewBag.Hizmetler;
+﻿@using proje.Models
+@model Musteri
+
+@{
+    ViewData["Title"] = "Randevularım";
 }
 
-<h2 class="mb-4">Randevu Al</h2>
+<h2 class="mb-4">Randevular</h2>
 
-<div class="mb-3">
-    <label class="form-label">Hizmet Seç</label>
-    <select id="hizmetSelect" class="form-select">
-        <option value="">Hizmet seçiniz</option>
-        @foreach (var h in hizmetler)
-        {
-            <option value="@h.Id">@h.Ad</option>
-        }
-    </select>
+<!-- ÜST BUTONLAR -->
+<div class="mb-4">
+    <a asp-action="RandevuAl" class="btn btn-success me-2">
+        ➕ Randevu Al
+    </a>
+
+    <button class="btn btn-info" id="aiBtn">
+        🤖 Yapay Zeka Önerisi Al
+    </button>
 </div>
 
+<hr />
+
+<!-- KULLANICININ RANDEVULARI -->
+<h4>Aktif / Bekleyen Randevularım</h4>
 <div class="mb-3">
-    <label class="form-label">Antrenör Seç</label>
-    <select id="trainerSelect" class="form-select" disabled>
-        <option value="">Önce hizmet seçiniz</option>
-    </select>
+    <button class="btn btn-outline-success filter-btn" data-filter="Aktif">
+        Aktif Randevular
+    </button>
+    <button class="btn btn-outline-warning filter-btn" data-filter="Beklemede">
+        Bekleyen Randevular
+    </button>
+    <button class="btn btn-outline-secondary filter-btn" data-filter="İptal">
+        İptal Edilenler
+    </button>
 </div>
 
-<div class="mb-3">
-    <label class="form-label">Tarih Seç</label>
-    <input type="date" id="tarihInput" class="form-control" />
-</div>
 
-<div class="mb-3">
-    <label class="form-label">Saat Seç</label>
-    <select id="saatSelect" class="form-select" disabled>
-        <option value="">Önce tarih seçiniz</option>
-    </select>
-</div>
+@if (Model.Randevular == null || !Model.Randevular.Any())
+{
+    <div class="alert alert-secondary">
+        Henüz randevunuz bulunmamaktadır.
+    </div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>Saat</th>
+                <th>Antrenör</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.Randevular)
+            {
+                <tr data-durum="@r.Durum">
 
-<button class="btn btn-success" disabled id="randevuBtn">
-    Randevu Al
-</button>
+                    <td>@r.Tarih.ToShortDateString()</td>
+                    <td>
+                        @r.BaslangicSaat - @r.BitisSaat
+                    </td>
+                    <td>@r.Trainer?.AdSoyad</td>
+                    <td>
+                        @if (r.Durum == "Beklemede")
+                        {
+                            <span class="badge bg-warning">Beklemede</span>
+                        }
+                        else if (r.Durum == "Aktif")
+                        {
+                            <span class="badge bg-success">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Bilinmiyor</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="modal fade" id="aiModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yapay Zeka Önerisi</h5>
+            </div>
+            <div class="modal-body">
+                Yapay zeka sizin için uygun egzersiz planını hazırlıyor...
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-
-            // Başlangıç
-            $("#trainerSelect, #tarihInput, #saatSelect, #randevuBtn")
-                .prop("disabled", true);
-
-            // 1️⃣ HİZMET SEÇ → ANTRENÖRLER
-            $("#hizmetSelect").change(function () {
-                let hizmetId = $(this).val();
-
-                $("#trainerSelect").prop("disabled", true).empty()
-                    .append("<option value=''>Yükleniyor...</option>");
-                $("#tarihInput, #saatSelect, #randevuBtn").prop("disabled", true);
-
-                if (!hizmetId) return;
-
-                $.get("/Randevu/GetTrainerByHizmet", { hizmetId }, function (data) {
-                    $("#trainerSelect").empty()
-                        .append("<option value=''>Antrenör seçiniz</option>");
-
-                    data.forEach(t => {
-                        $("#trainerSelect").append(
-                            `<option value="${t.id}">${t.adSoyad}</option>`
-                        );
-                    });
-
-                    $("#trainerSelect").prop("disabled", false);
-                });
-            });
-
-            // 2️⃣ ANTRENÖR SEÇ → TARİH AKTİF
-            $("#trainerSelect").change(function () {
-                let trainerId = $(this).val();
-
-                $("#tarihInput").prop("disabled", !trainerId);
-                $("#saatSelect, #randevuBtn").prop("disabled", true);
-            });
-
-            // 3️⃣ TARİH SEÇ → SAATLER
-            $("#tarihInput").change(function () {
-                let trainerId = $("#trainerSelect").val();
-                let tarih = $(this).val();
-
-                if (!trainerId || !tarih) return;
-
-                $("#saatSelect").prop("disabled", true)
-                    .empty().append("<option>Yükleniyor...</option>");
-
-                $.get("/Randevu/GetUygunSaatler",
-                    { trainerId, tarih },
-                    function (saatler) {
-
-                        $("#saatSelect").empty()
-                            .append("<option value=''>Saat seçiniz</option>");
-
-                        saatler.forEach(s => {
-                            $("#saatSelect").append(
-                                `<option value="${s}">${s}</option>`
-                            );
-                        });
-
-                        $("#saatSelect").prop("disabled", false);
-                    });
-            });
-
-            // 4️⃣ SAAT SEÇ → BUTON AKTİF
-            $("#saatSelect").change(function () {
-                $("#randevuBtn").prop("disabled", !$(this).val());
-            });
-
-            // 5️⃣ RANDEVU AL
-            $("#randevuBtn").click(function () {
-                $.post("/Randevu/RandevuAl", {
-                    trainerId: $("#trainerSelect").val(),
-                    tarih: $("#tarihInput").val(),
-                    saat: $("#saatSelect").val()
-                }, function () {
-                    alert("Randevu başarıyla alındı");
-                });
-            });
-
+        $("#aiBtn").click(function () {
+            $("#aiModal").modal("show");
         });
+              // Varsayılan: sadece Aktif göster
+        $(document).ready(function () {
+            filtrele("Aktif");
+        });
+
+        $(".filter-btn").click(function () {
+            let durum = $(this).data("filter");
+            filtrele(durum);
+        });
+
+        function filtrele(durum) {
+            $("tbody tr").each(function () {
+                let rowDurum = $(this).data("durum");
+                if (rowDurum === durum) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
     </script>
 }
-
-}
-
-

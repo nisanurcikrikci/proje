@@ -20,13 +20,20 @@ namespace proje.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+     SignInManager<IdentityUser> signInManager,
+     UserManager<IdentityUser> userManager,
+     ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -114,8 +121,16 @@ namespace proje.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return RedirectToAction("Profilim", "Musteri"); ;
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        return RedirectToAction("Index", "Admin");
+
+                    if (await _userManager.IsInRoleAsync(user, "Trainer"))
+                        return RedirectToAction("Randevularim", "Trainer");
+
+                    return RedirectToAction("Profilim", "Musteri");
+
                 }
                 if (result.RequiresTwoFactor)
                 {
